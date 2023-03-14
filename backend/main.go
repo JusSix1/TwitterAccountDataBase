@@ -1,6 +1,7 @@
 package main
 
 import (
+	login_controller "github.com/JusSix1/TwitterAccountDataBase/controller/login"
 	user_controller "github.com/JusSix1/TwitterAccountDataBase/controller/user"
 	"github.com/JusSix1/TwitterAccountDataBase/entity"
 
@@ -14,12 +15,10 @@ func main() {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 
+	// login User Route
+	r.POST("/login/user", login_controller.LoginUser)
+	r.POST("/users", user_controller.CreateUser)
 	r.GET("/genders", user_controller.ListGenders)
-
-	// // login User Route
-	// r.POST("/login/user", login_controller.LoginUser)
-	// r.POST("/users", user_controller.CreateUser)
-	// r.GET("/genders", user_controller.ListGenders)
 
 	// // login Admin Route
 	// r.POST("/login/admin", login_controller.LoginAdmin)
