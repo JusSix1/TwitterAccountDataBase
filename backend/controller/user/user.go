@@ -33,6 +33,8 @@ func CreateUser(c *gin.Context) {
 	// create new object for create new record
 	newUser := entity.User{
 		Email:           user.Email,
+		FirstName:       user.FirstName,
+		LastName:        user.LastName,
 		Password:        user.Password,
 		Profile_Name:    user.Profile_Name,
 		Profile_Picture: user.Profile_Picture,
@@ -62,4 +64,18 @@ func CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
 
+}
+
+// GET /user/:email --> ใช้อยู่
+
+func GetUser(c *gin.Context) {
+	var user entity.User
+	email := c.Param("email")
+
+	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,firstname,lastname,profile_name,profile_picture,birthday,gender_id FROM users WHERE email = ?", email).Find(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }

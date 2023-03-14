@@ -39,6 +39,8 @@ function SignIn_User() {
   const [errorMsg,setErrorMsg] = useState<String | null>(null);
   
   const [email, setEmail] = React.useState<string | null>(null);
+  const [firstName, setFirstName] = React.useState<string | null>(null);
+  const [lastName, setLastName] = React.useState<string | null>(null);
   const [profile_name, setProfile_name] = React.useState<string | null>(null);
   const [gender_id, setGender_id] = React.useState<Number | null>(null);
   const [birthday, setBirthday] = React.useState<Dayjs | null>(dayjs());
@@ -209,6 +211,8 @@ function SignIn_User() {
     if(new_password == confirm_password){ // password ตรงกันก็จะ มีการ submit
       let data = {
           Email: email,
+          FirstName: firstName,
+          LastName: lastName,
           Password: new_password, // ตัวแปรชื่อ new_passwotf ก็จริงแต่อาจเป็น password เดิมก็ได้
           Profile_Name: profile_name,
           Profile_Picture: imageString,
@@ -417,10 +421,26 @@ function SignIn_User() {
                   <Grid margin={1} item xs={12}>
                     <TextField
                             fullWidth
-                            id="nemail"
+                            id="email"
                             label="Email"
                             variant="outlined"
                             onChange={(event) => setEmail(String(event.target.value))}/>
+                  </Grid>
+                  <Grid margin={1} item xs={12}>
+                    <TextField
+                            fullWidth
+                            id="firstname"
+                            label="First name"
+                            variant="outlined"
+                            onChange={(event) => setFirstName(String(event.target.value))}/>
+                  </Grid>
+                  <Grid margin={1} item xs={12}>
+                    <TextField
+                            fullWidth
+                            id="lastname"
+                            label="Last name"
+                            variant="outlined"
+                            onChange={(event) => setLastName(String(event.target.value))}/>
                   </Grid>
                   <Grid margin={1} item xs={12}>
                       <TextField
