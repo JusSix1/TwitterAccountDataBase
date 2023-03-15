@@ -70,7 +70,7 @@ function FullAppBar() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const getUser = async () => {
-    const apiUrl = "http://localhost:8080/user/" + localStorage.getItem("email");
+    const apiUrl = "http://192.168.1.37:8080/user/" + localStorage.getItem("email");
     const requestOptions = {
       method: "GET",
       headers: {
@@ -170,7 +170,6 @@ function FullAppBar() {
                 onClose={handleClose}
               >
                 {/* {myProfileUser()} for user */}
-                {/* {myStoreMenuItem()} */}
                 <MenuItem onClick={signout} component={RouterLink} to="/" >Logout</MenuItem>
               </Menu>
             </div>

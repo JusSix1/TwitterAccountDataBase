@@ -55,7 +55,7 @@ function SignIn_User() {
   const [error, setError] = useState(false);
 
   async function LoginUser(data: SigninUserInterface) {
-    const apiUrl = "http://localhost:8080";
+    const apiUrl = "http://192.168.1.37:8080";
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -81,7 +81,7 @@ function SignIn_User() {
   }
 
   async function LoginAdmin(data: SigninUserInterface) {
-    const apiUrl = "http://localhost:8080";
+    const apiUrl = "http://192.168.1.37:8080";
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -108,7 +108,7 @@ function SignIn_User() {
   }
 
   const getGender = async () => {
-    const apiUrl = "http://localhost:8080/genders";
+    const apiUrl = "http://192.168.1.37:8080/genders";
     const requestOptions = {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -446,8 +446,8 @@ function SignIn_User() {
                       <TextField
                           fullWidth
                           type="password"
-                          id="new-password"
-                          label="New Password"
+                          id="password"
+                          label="Password"
                           variant="outlined"
                           onChange={(event) => setNew_password(String(event.target.value))}/>
                   </Grid>
@@ -470,24 +470,6 @@ function SignIn_User() {
                         label="Profile Name"
                         variant="outlined"
                         onChange={(event) => setProfile_name(String(event.target.value))}/>
-                    <Grid marginTop={1}> {/* gender radio button */}
-                        <FormControl>
-                            <FormLabel id="radio-buttons-group-gender">Gender</FormLabel>
-                                <RadioGroup
-                                    aria-labelledby="radio-buttons-group-gender"
-                                    name="radio-buttons-group-gender"
-                                    onChange={(event) => setGender_id(Number(event.target.value))}
-                                >
-                                    {genders.map((o) => (
-                                    <FormControlLabel
-                                        value={o.ID} // <---- pass a primitive id value, don't pass the whole object here
-                                        control={<Radio size="small" />}
-                                        label={o.Gender}
-                                    />
-                                    ))}
-                            </RadioGroup>
-                        </FormControl>
-                    </Grid>
                   </Grid>
 
                   <Grid marginTop={1}>
@@ -501,6 +483,25 @@ function SignIn_User() {
                                   }}
                           />
                           </LocalizationProvider>
+                      </Grid>
+
+                      <Grid marginTop={1}> {/* gender radio button */}
+                        <FormControl>
+                            <FormLabel id="radio-buttons-group-gender">Gender</FormLabel>
+                                <RadioGroup
+                                    aria-labelledby="radio-buttons-group-gender"
+                                    name="radio-buttons-group-gender"
+                                    onChange={(event) => setGender_id(Number(event.target.value))}
+                                    >
+                                      {genders.map((o) => (
+                                      <FormControlLabel
+                                          value={o.ID} // <---- pass a primitive id value, don't pass the whole object here
+                                          control={<Radio size="small" />}
+                                          label={o.Gender}
+                                      />
+                                      ))}
+                              </RadioGroup>
+                          </FormControl>
                       </Grid>
                   </Grid>
 

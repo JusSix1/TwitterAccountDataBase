@@ -71,7 +71,7 @@ func GetUser(c *gin.Context) {
 	var user entity.User
 	email := c.Param("email")
 
-	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,firstname,lastname,profile_name,profile_picture,birthday,gender_id FROM users WHERE email = ?", email).Find(&user).Error; err != nil {
+	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,first_name,last_name,profile_name,profile_picture,birthday,gender_id FROM users WHERE email = ?", email).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
