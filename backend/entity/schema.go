@@ -16,10 +16,10 @@ type Gender struct {
 
 type User struct {
 	gorm.Model
-	Email           string    `gorm:"uniqueIndex" valid:"email~Invalid Email format,required~Email is blank"`
+	Email           string    `gorm:"uniqueIndex" valid:"email~Invalid Email format,required~Email is blank,omitempty"`
 	FirstName       string    `valid:"required~First name is blank"`
 	LastName        string    `valid:"required~Last name is blank"`
-	Password        string    `valid:"minstringlength(8)~Password must be longer than 8 characters,required~Password is blank"`
+	Password        string    `valid:"minstringlength(8)~Password must be longer than 8 characters,required~Password is blank,omitempty"`
 	Profile_Name    string    `valid:"maxstringlength(50)~Must be no more than 50 characters long,required~Profile name is blank"`
 	Profile_Picture string    `valid:"image_valid~Please change the picture"`
 	Birthday        time.Time `valid:"NotFutureTime~The day must not be the future,MoreThan18YearsAgo~You must be over 18 years old"`
