@@ -40,6 +40,7 @@ func CreateUser(c *gin.Context) {
 		Profile_Picture: user.Profile_Picture,
 		Gender:          gender,
 		Birthday:        user.Birthday,
+		Phone_number:    user.Phone_number,
 	}
 
 	// validate user
@@ -71,7 +72,7 @@ func GetUser(c *gin.Context) {
 	var user entity.User
 	email := c.Param("email")
 
-	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,first_name,last_name,profile_name,profile_picture,birthday,gender_id FROM users WHERE email = ?", email).Find(&user).Error; err != nil {
+	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,first_name,last_name,profile_name,profile_picture,birthday,gender_id,phone_number FROM users WHERE email = ?", email).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -102,6 +103,7 @@ func UpdateUser(c *gin.Context) {
 		Profile_Picture: user.Profile_Picture,
 		Gender:          gender,
 		Birthday:        user.Birthday,
+		Phone_number:    user.Phone_number,
 	}
 
 	// validate user

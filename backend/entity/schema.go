@@ -23,6 +23,7 @@ type User struct {
 	Profile_Name    string    `valid:"maxstringlength(50)~Must be no more than 50 characters long,required~Profile name is blank"`
 	Profile_Picture string    `valid:"image_valid~Please change the picture"`
 	Birthday        time.Time `valid:"NotFutureTime~The day must not be the future,MoreThan18YearsAgo~You must be over 18 years old"`
+	Phone_number    string    `valid:"required~Phone number is blank,matches([0-9]{10})~Phone number invalid format"`
 	Gender_ID       *uint     `valid:"-"`
 	Gender          Gender    `gorm:"references:id" valid:"-"`
 }

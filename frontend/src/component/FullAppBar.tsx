@@ -24,6 +24,7 @@ import TrendingUpTwoToneIcon from '@mui/icons-material/TrendingUpTwoTone';
 import { Link as RouterLink } from "react-router-dom";
 import { UsersInterface } from '../models/user/IUser';
 // import { AdminsInterface } from '../models/admin/IAdmin';
+import ip_address from './ip';
 
 function FullAppBar() {
   const [user, setUser] = React.useState<Partial<UsersInterface>>({});
@@ -49,12 +50,12 @@ function FullAppBar() {
     }
   }
 
-  // function myProfileUser() {
-  //   if (localStorage.getItem("position") == "User")
-  //     return (
-  //       <MenuItem onClick={handleClose} component={RouterLink} to={"/user_profile/" + localStorage.getItem("id")} >My Profile</MenuItem>
-  //     )
-  // }
+  function myProfileUser() {
+    if (localStorage.getItem("position") == "User")
+      return (
+        <MenuItem onClick={handleClose} component={RouterLink} to={"/profile/" + localStorage.getItem("email")} >My Profile</MenuItem>
+      )
+  }
 
   const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -70,7 +71,7 @@ function FullAppBar() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const getUser = async () => {
-    const apiUrl = "http://192.168.1.37:8080/user/" + localStorage.getItem("email");
+    const apiUrl = "http://" + ip_address() + "/user/" + localStorage.getItem("email");
     const requestOptions = {
       method: "GET",
       headers: {
@@ -169,7 +170,7 @@ function FullAppBar() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {/* {myProfileUser()} for user */}
+                {myProfileUser()}{/*  for user */}
                 <MenuItem onClick={signout} component={RouterLink} to="/" >Logout</MenuItem>
               </Menu>
             </div>

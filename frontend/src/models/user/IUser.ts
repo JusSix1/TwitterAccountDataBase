@@ -9,6 +9,7 @@ export interface UsersInterface { // Maybe BUG warning คือตัวเช�
 	Profile_Name: string,
 	Profile_Picture: string, // JavaScript Int8Array = byte ; แต่ต้องลองใช้ดูว่า work ไหมกับ go []byte
 	Birthday: Date,
+	Phone_number: string,
 	Gender_ID: number,
 	Gender: GendersInterface,
 }
