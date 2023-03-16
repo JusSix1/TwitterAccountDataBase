@@ -34,6 +34,7 @@ func main() {
 			protected.PATCH("/usersPassword", user_controller.UpdateUserPassword)
 			protected.DELETE("/users/:email", user_controller.DeleteUser)
 
+			protected.POST("/account", account_controller.CreateAccount)
 			protected.GET("/account/:email", account_controller.GetAccount)
 		}
 	}

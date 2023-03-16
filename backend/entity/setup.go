@@ -110,11 +110,11 @@ func SetupDatabase() {
 	Account4 := Account{
 		ID_Account:        4,
 		User_ID:           &User1.ID,
-		Twitter_Account:   "Account_Name_3",
-		Twitter_Password:  "Account_Password_3",
-		Email:             "Email_Name_3",
-		Email_Password:    "Email_Password_3",
-		Phone_Number:      "Phone_3",
+		Twitter_Account:   "Account_Name_4",
+		Twitter_Password:  "Account_Password_4",
+		Email:             "Email_Name_4",
+		Email_Password:    "Email_Password_4",
+		Phone_Number:      "Phone_4",
 		Years:             2020,
 		Account_Status_ID: &AS2.ID,
 	}

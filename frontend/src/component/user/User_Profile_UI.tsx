@@ -140,7 +140,7 @@ function User_Profile(){
             });
       };
 
-    const EditAccount = () => {    
+    const EditUser = () => {    
         let data = {
             Email: email,
             FirstName: userEdit.FirstName,
@@ -261,7 +261,7 @@ function User_Profile(){
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
                 <Alert onClose={handleClose} severity="success">              
-                    บันทึกข้อมูลสำเร็จ
+                    Succes
                 </Alert>
             </Snackbar>
 
@@ -272,7 +272,7 @@ function User_Profile(){
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
                 <Alert onClose={handleClose} severity="error">
-                    บันทึกข้อมูลไม่สำเร็จ {errorMsg}
+                    Error {errorMsg}
                 </Alert>
             </Snackbar>
             <Grid>
@@ -461,7 +461,7 @@ function User_Profile(){
                 </DialogContent>
             <DialogActions>
                 <Button onClick={handleDialogEditClickClose}>Cancel</Button>
-                <Button onClick={EditAccount} color="error" autoFocus>Update Data</Button>
+                <Button onClick={EditUser} color="error" autoFocus>Update Data</Button>
             </DialogActions>
         </Dialog>
 
