@@ -30,6 +30,7 @@ func main() {
 		{
 			protected.GET("/user/:email", user_controller.GetUser)
 			protected.PATCH("/users", user_controller.UpdateUser)
+			protected.PATCH("/usersPassword", user_controller.UpdateUserPassword)
 			protected.DELETE("/users/:email", user_controller.DeleteUser)
 		}
 	}

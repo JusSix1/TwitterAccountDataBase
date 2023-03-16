@@ -34,8 +34,8 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 
-	//** 3: ค้นหาด้วยเลขบัตรประชาชน(Personal_ID) */ // ตรวจสอบว่ามี Personal ID ที่กรอกมาหรือไม่
-	if err := entity.DB().Raw("SELECT * FROM users WHERE email = ?", payload.Email).Scan(&user).Error; err != nil {
+	//** 3: ค้นหาด้วย Email */ // ตรวจสอบว่ามี Email ที่กรอกมาหรือไม่
+	if err := entity.DB().Raw("SELECT * FROM users WHERE email = ? AND deleted_at IS NULL", payload.Email).Scan(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error() + "email is incorrect"})
 		return
 	}

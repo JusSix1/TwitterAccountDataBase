@@ -22,12 +22,12 @@ func CreateUser(c *gin.Context) {
 	}
 
 	if tx := entity.DB().Where("id = ?", user.Gender_ID).First(&gender); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "กรุณาเลือกเพศ"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please select gender"})
 		return
 	}
 
 	if tx := entity.DB().Where("email = ?", user.Email).First(&emailCheck); !(tx.RowsAffected == 0) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "อีเมลนี้ถูกใช้ไปแล้ว"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "This email has already been taken."})
 		return
 	}
 
@@ -53,7 +53,7 @@ func CreateUser(c *gin.Context) {
 	// hashing after validate
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), 12)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "error hashing password"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error hashing password"})
 		return
 	}
 
@@ -73,7 +73,7 @@ func GetUser(c *gin.Context) {
 	var user entity.User
 	email := c.Param("email")
 
-	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,first_name,last_name,profile_name,profile_picture,birthday,gender_id,phone_number FROM users WHERE email = ?", email).Find(&user).Error; err != nil {
+	if err := entity.DB().Preload("Gender").Raw("SELECT id,email,first_name,last_name,profile_name,profile_picture,birthday,gender_id,phone_number FROM users WHERE email = ? AND deleted_at IS NULL", email).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -92,7 +92,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	if tx := entity.DB().Where("id = ?", user.Gender_ID).First(&gender); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "gender not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Gender not found"})
 		return
 	}
 
@@ -131,64 +131,111 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-// PATCH /users
+// PATCH /usersPassword
 func UpdateUserPassword(c *gin.Context) {
-	var user entity.User
-	var gender entity.Gender
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	type PasswordUser struct {
+		Email       string `gorm:"uniqueIndex" valid:"email~Invalid Email format,required~Email is blank"`
+		OldPassword string `valid:"minstringlength(8)~Password must be longer than 8 characters,required~Password is blank"`
+		NewPassword string `valid:"minstringlength(8)~Password must be longer than 8 characters,required~Password is blank"`
+	}
+
+	var passwordUser PasswordUser
+	var oldPassword entity.User
+
+	if err := c.ShouldBindJSON(&passwordUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if tx := entity.DB().Where("id = ?", user.Gender_ID).First(&gender); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "gender not found"})
+	if tx := entity.DB().Where("email = ?", passwordUser.Email).Last(&oldPassword); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
 		return
 	}
 
-	updateUser := entity.User{
-		FirstName:       user.FirstName,
-		LastName:        user.LastName,
-		Password:        user.Password,
-		Profile_Name:    user.Profile_Name,
-		Profile_Picture: user.Profile_Picture,
-		Gender:          gender,
-		Birthday:        user.Birthday,
-		Phone_number:    user.Phone_number,
-	}
-
-	// validate user
-	if _, err := govalidator.ValidateStruct(updateUser); err != nil {
+	// validate PasswordUser
+	if _, err := govalidator.ValidateStruct(passwordUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if !(user.Password[0:7] == "$2a$12$") { // เช็คว่ารหัสที่ผ่านเข้ามามีการ encrypt แล้วหรือยัง หากมีการ encrypt แล้วจะไม่ทำการ encrypt ซ้ำ
-		hashPassword, err := bcrypt.GenerateFromPassword([]byte(updateUser.Password), 12)
+	// ตรวจสอบรหัสผ่าน
+	err := bcrypt.CompareHashAndPassword([]byte(oldPassword.Password), []byte(passwordUser.OldPassword))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Old password is incorrect"})
+		return
+	}
+
+	updatePasswordUser := entity.User{
+		Password: passwordUser.NewPassword,
+	}
+
+	if !(passwordUser.NewPassword[0:7] == "$2a$12$") { // เช็คว่ารหัสที่ผ่านเข้ามามีการ encrypt แล้วหรือยัง หากมีการ encrypt แล้วจะไม่ทำการ encrypt ซ้ำ
+		hashPassword, err := bcrypt.GenerateFromPassword([]byte(updatePasswordUser.Password), 12)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "error hashing password"})
 			return
 		}
 		print("HASH!!!!")
-		updateUser.Password = string(hashPassword)
+		updatePasswordUser.Password = string(hashPassword)
 	} else {
 		print("NOT HASH!!!")
 	}
 
-	if err := entity.DB().Where("email = ?", user.Email).Updates(&updateUser).Error; err != nil {
+	if err := entity.DB().Where("email = ?", passwordUser.Email).Updates(&updatePasswordUser).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	c.JSON(http.StatusOK, gin.H{"data": passwordUser})
 
 }
 
 // DELETE /users/:email
 func DeleteUser(c *gin.Context) {
 	email := c.Param("email")
-	if tx := entity.DB().Exec("DELETE FROM users WHERE email = ?", email); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
+
+	type PasswordUser struct {
+		Password string `valid:"minstringlength(8)~Password must be longer than 8 characters,required~Password is blank"`
+	}
+
+	var passwordUser PasswordUser
+	var Password entity.User
+
+	if err := c.ShouldBindJSON(&passwordUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if tx := entity.DB().Where("email = ?", email).Last(&Password); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	// validate PasswordUser
+	if _, err := govalidator.ValidateStruct(passwordUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// ตรวจสอบรหัสผ่าน
+	err := bcrypt.CompareHashAndPassword([]byte(Password.Password), []byte(passwordUser.Password))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Old password is incorrect"})
+		return
+	}
+
+	if tx := entity.DB().Where("email = ?", email).Delete(&entity.User{}); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	deleteUser := entity.User{
+		Email: Password.Email + "-",
+	}
+
+	if err := entity.DB().Where("email = ?", Password.Email).Updates(&deleteUser).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

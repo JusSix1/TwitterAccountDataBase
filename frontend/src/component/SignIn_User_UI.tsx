@@ -74,7 +74,6 @@ function SignIn_User() {
           localStorage.setItem("position", res.data.position);
           return res.data;
         } else {
-          console.log(res.error);
           return false;
         }
       });
@@ -82,32 +81,32 @@ function SignIn_User() {
     return res;
   }
 
-  async function LoginAdmin(data: SigninUserInterface) {
-    const apiUrl = "http://" + ip_address() + ":8080";
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    };
+  // async function LoginAdmin(data: SigninUserInterface) {
+  //   const apiUrl = "http://" + ip_address() + ":8080";
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(data),
+  //   };
   
-    let res = await fetch(`${apiUrl}/login/admin`, requestOptions)
-      .then((response) => response.json())
-      .then((res) => {
-        if (res.data) {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("aid", res.data.id);
-          localStorage.setItem("name", res.data.name);
-          localStorage.setItem("email", res.data.email);
-          localStorage.setItem("position", res.data.position);
-          return res.data;
-        } else {
-          console.log(res.error);
-          return false;
-        }
-      });
+  //   let res = await fetch(`${apiUrl}/login/admin`, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((res) => {
+  //       if (res.data) {
+  //         localStorage.setItem("token", res.data.token);
+  //         localStorage.setItem("aid", res.data.id);
+  //         localStorage.setItem("name", res.data.name);
+  //         localStorage.setItem("email", res.data.email);
+  //         localStorage.setItem("position", res.data.position);
+  //         return res.data;
+  //       } else {
+  //         console.log(res.error);
+  //         return false;
+  //       }
+  //     });
       
-    return res;
-  }
+  //   return res;
+  // }
 
   const getGender = async () => {
     const apiUrl = "http://" + ip_address() + ":8080/genders";
@@ -193,17 +192,17 @@ function SignIn_User() {
     }
   };
 
-  const submitAdmin = async () => {
-    let res = await LoginAdmin(signinAdmin);
-    if (res) {
-      setSuccess(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } else {
-      setError(true);
-    }
-  };
+  // const submitAdmin = async () => {
+  //   let res = await LoginAdmin(signinAdmin);
+  //   if (res) {
+  //     setSuccess(true);
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 1000);
+  //   } else {
+  //     setError(true);
+  //   }
+  // };
 
   const createAccount = () => {
     const signout = () => {
@@ -584,7 +583,7 @@ function SignIn_User() {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleDialogAdminClose} color="error">Cancel</Button>
-            <Button onClick={submitAdmin} autoFocus>SIGN IN</Button>
+            {/* <Button onClick={submitAdmin} autoFocus>SIGN IN</Button> */}
         </DialogActions>
       </Dialog>
 

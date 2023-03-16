@@ -70,25 +70,25 @@ function FullAppBar() {
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
-  const getUser = async () => {
-    const apiUrl = "http://" + ip_address() + "/user/" + localStorage.getItem("email");
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
-    };
+  // const getUser = async () => {
+  //   const apiUrl = "http://" + ip_address() + "/user/" + localStorage.getItem("email");
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //   };
 
-    await fetch(apiUrl, requestOptions)
-      .then((response) => response.json())
-      .then((res) => {
-        if (res.data) {
-          setUser(res.data);
+  //   await fetch(apiUrl, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((res) => {
+  //       if (res.data) {
+  //         setUser(res.data);
 
-        }
-      });
-  };
+  //       }
+  //     });
+  // };
 
   // async function GetAdmin() {
   //   const apiUrl = "http://localhost:8080/admin/" + localStorage.getItem("email");
@@ -111,7 +111,7 @@ function FullAppBar() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      await getUser();
+      // await getUser();
       // await GetAdmin();
     }
     fetchData();

@@ -17,6 +17,8 @@
     "@types/node": "^16.18.16",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "bcryptjs": "^2.4.3",
+    "bcryptjs-react": "^2.4.6",
     "dayjs": "^1.11.7",
     "moment": "^2.29.4",
     "package": "^1.0.1",
@@ -51,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2"
   }
 }
