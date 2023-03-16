@@ -1,6 +1,7 @@
 package main
 
 import (
+	account_controller "github.com/JusSix1/TwitterAccountDataBase/controller/account"
 	login_controller "github.com/JusSix1/TwitterAccountDataBase/controller/login"
 	user_controller "github.com/JusSix1/TwitterAccountDataBase/controller/user"
 	"github.com/JusSix1/TwitterAccountDataBase/entity"
@@ -32,6 +33,8 @@ func main() {
 			protected.PATCH("/users", user_controller.UpdateUser)
 			protected.PATCH("/usersPassword", user_controller.UpdateUserPassword)
 			protected.DELETE("/users/:email", user_controller.DeleteUser)
+
+			protected.GET("/account/:email", account_controller.GetAccount)
 		}
 	}
 

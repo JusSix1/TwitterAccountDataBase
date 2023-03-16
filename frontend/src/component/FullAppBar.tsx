@@ -45,6 +45,11 @@ function FullAppBar() {
             <ListItemText primary="FirstPage" sx={{ paddingLeft: 1 }} />
           </ListItem>
 
+          <ListItem button component={RouterLink} to="/AllMyAccount">
+            <HomeIcon />
+            <ListItemText primary="All My Account" sx={{ paddingLeft: 1 }} />
+          </ListItem>
+
         </List>
       );
     }

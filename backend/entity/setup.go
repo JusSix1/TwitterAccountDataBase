@@ -31,11 +31,14 @@ func SetupDatabase() {
 		// User
 		&Gender{},
 		&User{},
+
+		//Account
+		&Account_Status{},
+		&Account{},
 	)
 
 	db = database
 
-	// User
 	Gen1 := Gender{
 		Gender: "Male",
 	}
@@ -49,7 +52,6 @@ func SetupDatabase() {
 	db.Model(&Gender{}).Create(&Gen2)
 	db.Model(&Gender{}).Create(&Gen3)
 
-	// User for first declaration
 	User1 := User{
 		Email:           "natt@gmail.com",
 		Password:        "$2a$12$I0y6Rso/myQzK0EXsS0dv.a908//LMR7faAJgUJ.7LY2GrzoEsvWa",
@@ -62,4 +64,62 @@ func SetupDatabase() {
 		Gender_ID:       &Gen1.ID,
 	}
 	db.Model(&User{}).Create(&User1)
+
+	AS1 := Account_Status{
+		Status: "Sold",
+	}
+	AS2 := Account_Status{
+		Status: "Unsold",
+	}
+	db.Model(&Account_Status{}).Create(&AS1)
+	db.Model(&Account_Status{}).Create(&AS2)
+
+	Account1 := Account{
+		ID_Account:        1,
+		User_ID:           &User1.ID,
+		Twitter_Account:   "Account_Name_1",
+		Twitter_Password:  "Account_Password_1",
+		Email:             "Email_Name_1",
+		Email_Password:    "Email_Password_1",
+		Phone_Number:      "Phone_1",
+		Years:             2018,
+		Account_Status_ID: &AS1.ID,
+	}
+	Account2 := Account{
+		ID_Account:        2,
+		User_ID:           &User1.ID,
+		Twitter_Account:   "Account_Name_2",
+		Twitter_Password:  "Account_Password_2",
+		Email:             "Email_Name_2",
+		Email_Password:    "Email_Password_2",
+		Phone_Number:      "Phone_2",
+		Years:             2019,
+		Account_Status_ID: &AS2.ID,
+	}
+	Account3 := Account{
+		ID_Account:        3,
+		User_ID:           &User1.ID,
+		Twitter_Account:   "Account_Name_3",
+		Twitter_Password:  "Account_Password_3",
+		Email:             "Email_Name_3",
+		Email_Password:    "Email_Password_3",
+		Phone_Number:      "Phone_3",
+		Years:             2018,
+		Account_Status_ID: &AS1.ID,
+	}
+	Account4 := Account{
+		ID_Account:        4,
+		User_ID:           &User1.ID,
+		Twitter_Account:   "Account_Name_3",
+		Twitter_Password:  "Account_Password_3",
+		Email:             "Email_Name_3",
+		Email_Password:    "Email_Password_3",
+		Phone_Number:      "Phone_3",
+		Years:             2020,
+		Account_Status_ID: &AS2.ID,
+	}
+	db.Model(&Account{}).Create(&Account1)
+	db.Model(&Account{}).Create(&Account2)
+	db.Model(&Account{}).Create(&Account3)
+	db.Model(&Account{}).Create(&Account4)
 }

@@ -26,6 +26,28 @@ type User struct {
 	Phone_number    string    `valid:"required~Phone number is blank,matches([0-9]{10})~Phone number invalid format"`
 	Gender_ID       *uint     `valid:"-"`
 	Gender          Gender    `gorm:"references:id" valid:"-"`
+	Account         []Account `gorm:"foreignKey:User_ID"`
+}
+
+type Account_Status struct {
+	gorm.Model
+	Status  string
+	Account []Account `gorm:"foreignKey:Account_Status_ID"`
+}
+
+type Account struct {
+	gorm.Model
+	ID_Account        uint           `valid:"-"`
+	User_ID           *uint          `valid:"-"`
+	User              User           `gorm:"references:id" valid:"-"`
+	Twitter_Account   string         `valid:"-"`
+	Twitter_Password  string         `valid:"-"`
+	Email             string         `valid:"-"`
+	Email_Password    string         `valid:"-"`
+	Phone_Number      string         `valid:"-"`
+	Years             uint           `valid:"-"`
+	Account_Status_ID *uint          `valid:"-"`
+	Account_Status    Account_Status `gorm:"references:id" valid:"-"`
 }
 
 func init() {

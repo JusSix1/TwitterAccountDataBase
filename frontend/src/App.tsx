@@ -5,7 +5,7 @@ import FullAppBar from "./component/FullAppBar";
 import Home_User from "./component/Home_User";
 import SignIn_User from "./component/SignIn_User_UI";
 import User_Profile_UI from "./component/user/User_Profile_UI";
-import User_Profile from "./component/user/User_Profile_UI";
+import All_Account_UI from "./component/account/All_Account_UI";
 
 export default function App() {
   const [token, setToken] = React.useState<String>("");
@@ -30,6 +30,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home_User/>} /> {/** home */}
           <Route path="/profile/:email" element={<User_Profile_UI/>} /> {/** user profile */}
+          <Route path="/AllMyAccount" element={<All_Account_UI/>} /> {/** All Account */}
         </Routes>
       );
     }
