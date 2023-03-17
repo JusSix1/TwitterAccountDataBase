@@ -36,6 +36,7 @@ func main() {
 
 			protected.POST("/account", account_controller.CreateAccount)
 			protected.GET("/account/:email", account_controller.GetAccount)
+			protected.DELETE("/account", account_controller.DeleteAccount)
 		}
 	}
 

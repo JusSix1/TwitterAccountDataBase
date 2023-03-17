@@ -48,8 +48,7 @@ func CreateAccount(c *gin.Context) {
 	}
 
 	if tx := entity.DB().Where("user_id = ?", user.ID).Last(&account); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Last account not found"})
-		return
+		account.ID_Account = 0
 	}
 
 	// create new object for create new record
@@ -92,4 +91,26 @@ func GetAccount(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": account})
+}
+
+// DELETE /account
+func DeleteAccount(c *gin.Context) {
+
+	type DeleteAccount struct {
+		ID uint
+	}
+
+	var deleteAccount DeleteAccount
+
+	if err := c.ShouldBindJSON(&deleteAccount); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if tx := entity.DB().Exec("DELETE FROM accounts WHERE id = ?", deleteAccount.ID); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "basket not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": deleteAccount})
 }
