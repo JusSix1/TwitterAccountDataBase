@@ -10,10 +10,12 @@ import dayjs, { Dayjs } from 'dayjs';
 import ip_address from '../ip';
 import { AccountsInterface } from '../../models/account/IAccount';
 import { AccountsImportInterface } from '../../models/account/IAccount_Import';
+import { OrdersInterface } from '../../models/order/IOrder';
 
 export default function All_Account_UI() {
     const [account, setAccount] = React.useState<AccountsInterface[]>([]);
     const [importAccount, setImportAccount] = React.useState<AccountsImportInterface[][]>([]);
+    const [order, setOrder] = React.useState<OrdersInterface[]>([]);
 
     const [success, setSuccess] = React.useState(false);
     const [error, setError] = React.useState(false);
@@ -141,6 +143,25 @@ export default function All_Account_UI() {
             .then((res) => {
                 if (res.data) {
                     setAccount(res.data); 
+                }
+            });
+    };
+
+    const getLastOrder = async () => {
+        const apiUrl = "http://" + ip_address() + ":8080/order/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+       
+        await fetch(apiUrl, requestOptions)
+            .then((response) => response.json())
+            .then((res) => {
+                if (res.data) {
+                    setOrder(res.data); 
                 }
             });
     };

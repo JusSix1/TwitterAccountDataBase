@@ -27,6 +27,7 @@ type User struct {
 	Gender_ID       *uint     `valid:"-"`
 	Gender          Gender    `gorm:"references:id" valid:"-"`
 	Account         []Account `gorm:"foreignKey:User_ID"`
+	Order           []Order   `gorm:"foreignKey:User_ID"`
 }
 
 type Account_Status struct {
@@ -48,6 +49,15 @@ type Account struct {
 	Years             uint           `valid:"-"`
 	Account_Status_ID *uint          `valid:"-"`
 	Account_Status    Account_Status `gorm:"references:id" valid:"-"`
+	Order_ID          *uint          `valid:"-"`
+	Order             Order          `gorm:"references:id" valid:"-"`
+}
+
+type Order struct {
+	gorm.Model
+	User_ID *uint     `valid:"-"`
+	User    User      `gorm:"references:id" valid:"-"`
+	Account []Account `gorm:"foreignKey:Order_ID"`
 }
 
 func init() {

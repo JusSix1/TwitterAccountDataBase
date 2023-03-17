@@ -35,6 +35,9 @@ func SetupDatabase() {
 		//Account
 		&Account_Status{},
 		&Account{},
+
+		//Order
+		&Order{},
 	)
 
 	db = database
@@ -86,6 +89,11 @@ func SetupDatabase() {
 	db.Model(&Account_Status{}).Create(&AS1)
 	db.Model(&Account_Status{}).Create(&AS2)
 
+	OR1 := Order{
+		User_ID: &User1.ID,
+	}
+	db.Model(&Order{}).Create(&OR1)
+
 	Account1 := Account{
 		ID_Account:        1,
 		User_ID:           &User1.ID,
@@ -96,6 +104,7 @@ func SetupDatabase() {
 		Phone_Number:      "Phone_1",
 		Years:             2018,
 		Account_Status_ID: &AS1.ID,
+		Order_ID:          &OR1.ID,
 	}
 	Account2 := Account{
 		ID_Account:        2,
