@@ -25,56 +25,86 @@ func CreateAccount(c *gin.Context) {
 		Account_Status_ID uint
 	}
 
-	var accountImport AccountImport
+	var accountImport []AccountImport
 
 	if err := c.ShouldBindJSON(&accountImport); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if tx := entity.DB().Where("email = ?", accountImport.Email_User).First(&user); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
-		return
-	}
+	for i := 0; i < len(accountImport); i++ {
 
-	if tx := entity.DB().Where("id = ?", accountImport.Account_Status_ID).First(&accountStatus); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Account status not found"})
-		return
-	}
+		if tx := entity.DB().Where("email = ?", accountImport[i].Email_User).First(&user); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+			return
+		}
 
-	if _, err := govalidator.ValidateStruct(accountImport); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+		if tx := entity.DB().Where("id = ?", accountImport[i].Account_Status_ID).First(&accountStatus); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Account status not found"})
+			return
+		}
 
-	if tx := entity.DB().Where("user_id = ?", user.ID).Last(&account); tx.RowsAffected == 0 {
-		account.ID_Account = 0
-	}
+		if _, err := govalidator.ValidateStruct(accountImport[i]); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 
-	// create new object for create new record
-	newAccount := entity.Account{
-		User_ID:           &user.ID,
-		ID_Account:        account.ID_Account + 1,
-		Twitter_Account:   accountImport.Twitter_Account,
-		Twitter_Password:  accountImport.Twitter_Password,
-		Email:             accountImport.Email_Accont,
-		Email_Password:    accountImport.Email_Password,
-		Phone_Number:      accountImport.Phone_Number,
-		Years:             accountImport.Years,
-		Account_Status_ID: &accountStatus.ID,
-	}
+		if err := entity.DB().Raw("SELECT * FROM accounts WHERE user_id = ? ORDER BY id DESC LIMIT 1", user.ID).Find(&account).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 
-	if err := entity.DB().Create(&newAccount).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		// create new object for create new record
+		newAccount := entity.Account{
+			User_ID:           &user.ID,
+			ID_Account:        account.ID_Account + 1,
+			Twitter_Account:   accountImport[i].Twitter_Account,
+			Twitter_Password:  accountImport[i].Twitter_Password,
+			Email:             accountImport[i].Email_Accont,
+			Email_Password:    accountImport[i].Email_Password,
+			Phone_Number:      accountImport[i].Phone_Number,
+			Years:             accountImport[i].Years,
+			Account_Status_ID: &accountStatus.ID,
+		}
+
+		if err := entity.DB().Create(&newAccount).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": accountImport})
 
 }
 
-// GET /account/:email
-func GetAccount(c *gin.Context) {
+// GET /all-account/:email
+func GetAllAccount(c *gin.Context) {
+	var user entity.User
+	var account []entity.Account
+	var accoountStatus entity.Account_Status
+
+	email := c.Param("email")
+
+	if tx := entity.DB().Where("email = ?", email).First(&user); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	if err := entity.DB().Raw("SELECT * FROM account_statuses WHERE status = 'Unsold'").Find(&accoountStatus).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := entity.DB().Preload("Account_Status").Raw("SELECT * FROM accounts WHERE user_id = ? AND account_status_id = ? ORDER BY id DESC", user.ID, accoountStatus.ID).Find(&account).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": account})
+}
+
+// GET /unsold-account/:email
+func GetUnsoldAccount(c *gin.Context) {
 	var user entity.User
 	var account []entity.Account
 
@@ -100,16 +130,20 @@ func DeleteAccount(c *gin.Context) {
 		ID uint
 	}
 
-	var deleteAccount DeleteAccount
+	var deleteAccount []DeleteAccount
 
 	if err := c.ShouldBindJSON(&deleteAccount); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if tx := entity.DB().Exec("DELETE FROM accounts WHERE id = ?", deleteAccount.ID); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "basket not found"})
-		return
+	for i := 0; i < len(deleteAccount); i++ {
+
+		if tx := entity.DB().Exec("DELETE FROM accounts WHERE id = ?", deleteAccount[i].ID); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "basket not found"})
+			return
+		}
+
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": deleteAccount})
