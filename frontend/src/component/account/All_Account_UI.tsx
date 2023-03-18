@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbar, FilterColumnsArgs, GetColumnForNewFilterArgs, GridColDef, GridRowSelectionModel, GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector } from '@mui/x-data-grid-pro';
+import { DataGridPro, FilterColumnsArgs, GetColumnForNewFilterArgs, GridColDef, GridRowSelectionModel, GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridEventListener, GridCellParams, MuiEvent } from '@mui/x-data-grid-pro';
 import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper, Snackbar } from '@mui/material';
 import * as XLSX from 'xlsx';
 import Moment from 'moment';
@@ -10,6 +10,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import ip_address from '../ip';
 import { AccountsInterface } from '../../models/account/IAccount';
 import { AccountsImportInterface } from '../../models/account/IAccount_Import';
+import UserFullAppBar from '../UserFullAppBar';
 
 export default function All_Account_UI() {
     const [account, setAccount] = React.useState<AccountsInterface[]>([]);
@@ -20,7 +21,6 @@ export default function All_Account_UI() {
     const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
     const [dialogLoadOpen, setDialogLoadOpen] = React.useState(false);
     const [dialogCreateOpen, setDialogCreateOpen] = React.useState(false);
-    const [dialogOrderOpen, setDialogOrderOpen] = React.useState(false);
     const [dialogDeleteOpen, setDialogDeleteOpen] = React.useState(false);
 
     const [year, setYear] = React.useState<Dayjs | null>(dayjs());
@@ -37,7 +37,7 @@ export default function All_Account_UI() {
             <GridToolbarDensitySelector />
             <GridToolbarExport 
                 csvOptions={{
-                    fileName: 'EntaccMyAccount '+Moment(year?.toDate()).format('DD-MMMM-YYYY h.mm.ssa'),
+                    fileName: 'EntaccMyAccount '+ Moment(year?.toDate()).format('DD-MMMM-YYYY h.mm.ssa'),
                     delimiter: ';',
                     utf8WithBom: true,
                 }}
@@ -86,14 +86,14 @@ export default function All_Account_UI() {
     const handleClose = (
         event?: React.SyntheticEvent | Event,
         reason?: string
-      ) => {
-        if (reason === "clickaway") {
-          return;
-        }
-        setSuccess(false);
-        setError(false);
-        setErrorMsg("")
-      };
+        ) => {
+            if (reason === "clickaway") {
+            return;
+            }
+            setSuccess(false);
+            setError(false);
+            setErrorMsg("")
+    };      
 
     const handleDialogCreateClickOpen = () => {
         setDialogCreateOpen(true);
@@ -102,14 +102,6 @@ export default function All_Account_UI() {
     const handleDialogCreateClickClose = () => {
         setDialogCreateOpen(false);
     };
-
-    const handleDialogOrderClickOpen = () => {
-        setDialogOrderOpen(true);
-    };
-
-    const handleDialogOrderClickClose = () => {
-        setDialogOrderOpen(false);
-    }
 
     const handleDialogDeleteClickOpen = () => {
         setDialogDeleteOpen(true);
@@ -137,7 +129,7 @@ export default function All_Account_UI() {
     };
       
     const getAccount = async () => {
-        const apiUrl = "http://" + ip_address() + ":8080/allaccount/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
+        const apiUrl = "http://" + ip_address() + ":8080/all-account/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
         const requestOptions = {
             method: "GET",
             headers: {
@@ -238,43 +230,6 @@ export default function All_Account_UI() {
         setDialogLoadOpen(false);
     }
 
-    const CreateOrder = async () => {    
-
-        setDialogLoadOpen(true);
-
-        var dataArr = [];
-
-        for (var i = 0; i < rowSelectionModel.length; i++) {
-            dataArr.push({
-                Account_ID:         rowSelectionModel[i],
-            });
-        }
-
-        const apiUrl = "http://" + ip_address() + ":8080/order/" + localStorage.getItem('email');                      //ส่งขอการแก้ไข
-        const requestOptions = {     
-            method: "POST",      
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json",
-            },     
-            body: JSON.stringify(dataArr),
-        };
-
-        await fetch(apiUrl, requestOptions)
-        .then((response) => response.json())
-        .then(async (res) => {      
-            if (res.data) {
-                setSuccess(true);
-                handleDialogOrderClickClose();
-                getAccount();
-            } else {
-                setError(true);  
-                setErrorMsg(" - "+res.error);  
-            }
-        });
-        setDialogLoadOpen(false);
-    }
-
     React.useEffect(() => {
         const fetchData = async () => {
             await getAccount();
@@ -283,22 +238,24 @@ export default function All_Account_UI() {
     }, []);
 
     return (
-        <Grid>
-            <Snackbar                                                                                 //ป้ายบันทึกสำเร็จ
+        <><UserFullAppBar /><Grid>
+            <Snackbar //ป้ายบันทึกสำเร็จ
+
                 open={success}
                 autoHideDuration={6000}
                 onClose={handleClose}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-                <Alert onClose={handleClose} severity="success">              
+                <Alert onClose={handleClose} severity="success">
                     Succes
                 </Alert>
             </Snackbar>
 
-            <Snackbar                                                                                 //ป้ายบันทึกไม่สำเร็จ
-                open={error} 
-                autoHideDuration={6000} 
-                onClose={handleClose} 
+            <Snackbar //ป้ายบันทึกไม่สำเร็จ
+
+                open={error}
+                autoHideDuration={6000}
+                onClose={handleClose}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
                 <Alert onClose={handleClose} severity="error">
@@ -309,36 +266,40 @@ export default function All_Account_UI() {
             <Grid container sx={{ padding: 2 }}>
                 <div style={{ height: 540, width: '100%' }}>
                     <DataGridPro
-                            rows={account}
-                            getRowId={(row) => row.ID}
-                            slots={{ toolbar: CustomToolbar }}
-                            columns={columns}
-                            slotProps={{
-                                filterPanel: {
-                                    filterFormProps: {
-                                        filterColumns,
-                                    },
-                                    getColumnForNewFilter,
+                        rows={account}
+                        getRowId={(row) => row.ID}
+                        slots={{ toolbar: CustomToolbar }}
+                        columns={columns}
+                        slotProps={{
+                            filterPanel: {
+                                filterFormProps: {
+                                    filterColumns,
                                 },
-                            }}    
-                            checkboxSelection  
-                            onRowSelectionModelChange={(newRowSelectionModel) => {
-                                setRowSelectionModel(newRowSelectionModel);
-                            }}
-                            rowSelectionModel={rowSelectionModel}
+                                getColumnForNewFilter,
+                            },
+                        }}
+                        checkboxSelection
+                        onRowSelectionModelChange={(newRowSelectionModel) => {
+                            setRowSelectionModel(newRowSelectionModel);
+                        } }
+                        rowSelectionModel={rowSelectionModel} 
+                        disableRowSelectionOnClick
+
+                        onCellDoubleClick={async (params, event) => {
+                            await navigator.clipboard.writeText(String(params.formattedValue));
+                            window.open("https://shadowban.yuzurisa.com/" + params.formattedValue , "_blank");
+                          }}
                         />
+                        
                 </div>
             </Grid>
 
             <Grid container sx={{ padding: 2 }}>
                 <Grid sx={{ padding: 2 }}>
-                        <Button variant="contained" color="primary" onClick={() => handleDialogCreateClickOpen()}>Import Account</Button>
+                    <Button variant="contained" color="primary" onClick={() => handleDialogCreateClickOpen()}>Import Account</Button>
                 </Grid>
                 <Grid sx={{ padding: 2 }}>
-                        <Button variant="contained" color="secondary" onClick={() => handleDialogOrderClickOpen()}>Order Account</Button>
-                </Grid>
-                <Grid sx={{ padding: 2 }}>
-                        <Button variant="contained" color="error" onClick={() => handleDialogDeleteClickOpen()}>Delete Account</Button>
+                    <Button variant="contained" color="error" onClick={() => handleDialogDeleteClickOpen()}>Delete Account</Button>
                 </Grid>
             </Grid>
 
@@ -354,20 +315,19 @@ export default function All_Account_UI() {
 
                 <DialogContent>
                     <Box>
-                        <Paper elevation={2} sx={{padding:2,margin:2}}>
+                        <Paper elevation={2} sx={{ padding: 2, margin: 2 }}>
                             <Grid container>
                                 <Grid container>
                                     <Grid margin={1} item xs={12}>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DatePicker 
-                                                label={'year'} 
-                                                openTo="year" 
+                                            <DatePicker
+                                                label={'year'}
+                                                openTo="year"
                                                 views={['year']}
                                                 defaultValue={year}
                                                 onChange={(newValue) => {
                                                     setYear(newValue);
-                                                    }}
-                                            />
+                                                } } />
                                         </LocalizationProvider>
                                     </Grid>
                                     <Grid margin={1} item xs={12}>
@@ -378,28 +338,13 @@ export default function All_Account_UI() {
                         </Paper>
                     </Box>
                 </DialogContent>
-            <DialogActions>
-                <Button onClick={handleDialogCreateClickClose}>Cancel</Button>
-                <Button onClick={CreateAccount} color="error" autoFocus>Import</Button>
-            </DialogActions>
-        </Dialog>
+                <DialogActions>
+                    <Button onClick={handleDialogCreateClickClose}>Cancel</Button>
+                    <Button onClick={CreateAccount} color="error" autoFocus>Import</Button>
+                </DialogActions>
+            </Dialog>
 
-        <Dialog
-                open={dialogOrderOpen}
-                onClose={handleDialogOrderClickClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Order " + rowSelectionModel.length + " Account"}
-                </DialogTitle>
-            <DialogActions>
-                <Button onClick={handleDialogOrderClickClose} color="inherit">Cancel</Button>
-                <Button onClick={CreateOrder} color="success" autoFocus>Import</Button>
-            </DialogActions>
-        </Dialog>
-            
-        <Dialog
+            <Dialog
                 open={dialogDeleteOpen}
                 onClose={handleDialogCreateClickClose}
                 aria-labelledby="alert-dialog-title"
@@ -408,14 +353,14 @@ export default function All_Account_UI() {
                 <DialogTitle id="alert-dialog-title">
                     {"Delete Account"}
                 </DialogTitle>
-            <DialogActions>
-                <Button onClick={handleDialogDeleteClickClose}>Cancel</Button>
-                <Button onClick={DeleteAccount} color="error" autoFocus>Delete</Button>
-            </DialogActions>
-        </Dialog>
-        
+                <DialogActions>
+                    <Button onClick={handleDialogDeleteClickClose}>Cancel</Button>
+                    <Button onClick={DeleteAccount} color="error" autoFocus>Delete</Button>
+                </DialogActions>
+            </Dialog>
 
-        <Dialog
+
+            <Dialog
                 open={dialogLoadOpen}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -423,8 +368,8 @@ export default function All_Account_UI() {
                 <DialogTitle id="alert-dialog-title">
                     {"Loading..."}
                 </DialogTitle>
-        </Dialog>
+            </Dialog>
 
-        </Grid>
+        </Grid></>
     );
 }

@@ -1,11 +1,13 @@
 import * as React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
-import FullAppBar from "./component/FullAppBar";
+import UserFullAppBar from "./component/UserFullAppBar";
 import Home_User from "./component/Home_User";
 import SignIn_User from "./component/SignIn_User_UI";
 import User_Profile_UI from "./component/user/User_Profile_UI";
 import All_Account_UI from "./component/account/All_Account_UI";
+import Order_Account_UI from "./component/order/orderAccount";
+import My_Order_UI from "./component/order/myOrder";
 
 export default function App() {
   const [token, setToken] = React.useState<String>("");
@@ -31,6 +33,8 @@ export default function App() {
           <Route path="/" element={<Home_User/>} /> {/** home */}
           <Route path="/profile/:email" element={<User_Profile_UI/>} /> {/** user profile */}
           <Route path="/AllMyAccount" element={<All_Account_UI/>} /> {/** All Account */}
+          <Route path="/UnsoldAccount" element={<Order_Account_UI/>} /> {/** All Account */}
+          <Route path="/MyOrder" element={<My_Order_UI/>} /> {/** All Account */}
         </Routes>
       );
     }
@@ -39,7 +43,6 @@ export default function App() {
   return (
   <Router>
     <div>
-      <FullAppBar />
       {routeList()}
     </div>
   </Router>

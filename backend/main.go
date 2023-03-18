@@ -38,10 +38,11 @@ func main() {
 			protected.POST("/account", account_controller.CreateAccount)
 			protected.GET("/all-account/:email", account_controller.GetAllAccount)
 			protected.GET("/unsold-account/:email", account_controller.GetUnsoldAccount)
+			protected.GET("/account-in-order/:id", account_controller.GetAccountInOrder)
 			protected.DELETE("/account", account_controller.DeleteAccount)
 
 			protected.POST("/order/:email", order_controller.CreateOrder)
-			protected.GET("/order/:email", order_controller.GetLastAccont)
+			protected.GET("/order/:email", order_controller.GetOrder)
 		}
 	}
 

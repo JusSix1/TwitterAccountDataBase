@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 
 import { UsersInterface } from '../../models/user/IUser';
 import ip_address from '../ip';
+import UserFullAppBar from '../UserFullAppBar';
 
 
 const ITEM_HEIGHT = 40;
@@ -253,22 +254,24 @@ function User_Profile(){
     }, []);
 
     if(isDataLoaded) return (
-        <Container>
-            <Snackbar                                                                                 //ป้ายบันทึกสำเร็จ
+        <><UserFullAppBar /><Container>
+            <Snackbar //ป้ายบันทึกสำเร็จ
+
                 open={success}
                 autoHideDuration={6000}
                 onClose={handleClose}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-                <Alert onClose={handleClose} severity="success">              
+                <Alert onClose={handleClose} severity="success">
                     Succes
                 </Alert>
             </Snackbar>
 
-            <Snackbar                                                                                 //ป้ายบันทึกไม่สำเร็จ
-                open={error} 
-                autoHideDuration={6000} 
-                onClose={handleClose} 
+            <Snackbar //ป้ายบันทึกไม่สำเร็จ
+
+                open={error}
+                autoHideDuration={6000}
+                onClose={handleClose}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
                 <Alert onClose={handleClose} severity="error">
@@ -278,7 +281,7 @@ function User_Profile(){
             <Grid>
                 <Grid container>
                     <Grid margin={2}>
-                        <img src={`${user.Profile_Picture}`} width="250" height="250"/> {/** show base64 picture from string variable (that contain base64 picture data) */}
+                        <img src={`${user.Profile_Picture}`} width="250" height="250" /> {/** show base64 picture from string variable (that contain base64 picture data) */}
                     </Grid>
                     <Grid marginLeft={1} item xs={10}>
                         <Grid>
@@ -288,25 +291,22 @@ function User_Profile(){
                             <Box
                                 component="div"
                                 sx={{
-                                width : "100%",
-                                textOverflow: 'ellipsis',overflow: 'hidden',
-                                whiteSpace: 'break-spaces',
-                                my: 2,
-                                p: 1,
-                                bgcolor: (theme) =>
-                                    theme.palette.mode === 'dark' ? '#101010' : 'grey.100',
-                                color: (theme) =>
-                                    theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
-                                border: '1px solid',
-                                borderColor: (theme) =>
-                                    theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-                                borderRadius: 2,
-                                fontSize: '0.875rem',
-                                fontWeight: '700',
+                                    width: "100%",
+                                    textOverflow: 'ellipsis', overflow: 'hidden',
+                                    whiteSpace: 'break-spaces',
+                                    my: 2,
+                                    p: 1,
+                                    bgcolor: (theme) => theme.palette.mode === 'dark' ? '#101010' : 'grey.100',
+                                    color: (theme) => theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+                                    border: '1px solid',
+                                    borderColor: (theme) => theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+                                    borderRadius: 2,
+                                    fontSize: '0.875rem',
+                                    fontWeight: '700',
                                 }}
                             >{/** กำหนดให้เว้นบรรทัด auto จาก white space */}
-                                {"Full name: " + user.FirstName + " " + user.LastName + "\n\n"} 
-                                {"Email: " + user.Email+ "\n\n"}
+                                {"Full name: " + user.FirstName + " " + user.LastName + "\n\n"}
+                                {"Email: " + user.Email + "\n\n"}
                                 {"Birthday: " + `${Moment(user.Birthday).format('DD MMMM YYYY')}` + "\n\n"}
                                 {"Phone number: " + user.Phone_number + "\n\n"}
                                 {"Gender: " + user.Gender?.Gender}
@@ -327,18 +327,18 @@ function User_Profile(){
                         <Menu
                             id="long-menu"
                             MenuListProps={{
-                            'aria-labelledby': 'long-button',
+                                'aria-labelledby': 'long-button',
                             }}
                             anchorEl={anchorEl}
                             open={openOption}
                             onClose={handleCloseOption}
                             PaperProps={{
-                            style: {
-                                maxHeight: ITEM_HEIGHT * 4.5,
-                                width: '20ch',
-                            },
+                                style: {
+                                    maxHeight: ITEM_HEIGHT * 4.5,
+                                    width: '20ch',
+                                },
                             }}
-                        >                               
+                        >
                             <MenuItem onClick={handleDialogEditClickOpen}>
                                 edit
                             </MenuItem>
@@ -353,63 +353,38 @@ function User_Profile(){
                 </Grid>
             </Grid>
 
-        <Dialog
-            open={dialogEditOpen}
-            onClose={handleDialogEditClickClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
+            <Dialog
+                open={dialogEditOpen}
+                onClose={handleDialogEditClickClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
             >
-            <DialogTitle id="alert-dialog-title">
-                {"Update Data"}
-            </DialogTitle>
+                <DialogTitle id="alert-dialog-title">
+                    {"Update Data"}
+                </DialogTitle>
 
-            <DialogContent>
-                <Box>
-                    <Paper elevation={2} sx={{padding:2,margin:2}}>
-                        <Grid container>
+                <DialogContent>
+                    <Box>
+                        <Paper elevation={2} sx={{ padding: 2, margin: 2 }}>
                             <Grid container>
-                                <Grid margin={1} item xs={12}>
-                                    <TextField
+                                <Grid container>
+                                    <Grid margin={1} item xs={12}>
+                                        <TextField
                                             fullWidth
                                             id="firstname"
                                             label="First name"
                                             variant="outlined"
                                             defaultValue={user.FirstName}
-                                            onChange={(event) => setUserEdit({ ...userEdit, FirstName: event.target.value })}/>
-                                </Grid>
-                                <Grid margin={1} item xs={12}>
-                                    <TextField
+                                            onChange={(event) => setUserEdit({ ...userEdit, FirstName: event.target.value })} />
+                                    </Grid>
+                                    <Grid margin={1} item xs={12}>
+                                        <TextField
                                             fullWidth
                                             id="lastname"
                                             label="Last name"
                                             variant="outlined"
                                             defaultValue={user.LastName}
-                                            onChange={(event) => setUserEdit({ ...userEdit, LastName: event.target.value })}/>
-                                </Grid>
-                            </Grid>
-
-                            <Grid container>
-                                <Grid margin={1} item xs={5}>
-                                    <TextField
-                                        fullWidth
-                                        id="profile-name"
-                                        label="Profile Name"
-                                        variant="outlined"
-                                        defaultValue={user.Profile_Name}
-                                        onChange={(event) => setUserEdit({ ...userEdit, Profile_Name: event.target.value })}/>
-                                </Grid>
-
-                                <Grid marginTop={1}>
-                                    <Grid>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DatePicker   
-                                                label="Birthday"
-                                                value={dayjs(user.Birthday)}
-                                                onChange={(newValue) => {
-                                                    setBirthday(newValue);
-                                                }}
-                                            />
-                                        </LocalizationProvider>
+                                            onChange={(event) => setUserEdit({ ...userEdit, LastName: event.target.value })} />
                                     </Grid>
                                 </Grid>
 
@@ -417,142 +392,165 @@ function User_Profile(){
                                     <Grid margin={1} item xs={5}>
                                         <TextField
                                             fullWidth
-                                            id="phonr-number"
-                                            label="Phone number"
+                                            id="profile-name"
+                                            label="Profile Name"
                                             variant="outlined"
-                                            defaultValue={user.Phone_number}
-                                            onChange={(event) => setUserEdit({ ...userEdit, Phone_number: event.target.value })}/>
+                                            defaultValue={user.Profile_Name}
+                                            onChange={(event) => setUserEdit({ ...userEdit, Profile_Name: event.target.value })} />
                                     </Grid>
+
                                     <Grid marginTop={1}>
-                                        <FormControl>
-                                            <FormLabel id="radio-buttons-group-gender">Gender</FormLabel>
+                                        <Grid>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DatePicker
+                                                    label="Birthday"
+                                                    value={dayjs(user.Birthday)}
+                                                    onChange={(newValue) => {
+                                                        setBirthday(newValue);
+                                                    } } />
+                                            </LocalizationProvider>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container>
+                                        <Grid margin={1} item xs={5}>
+                                            <TextField
+                                                fullWidth
+                                                id="phonr-number"
+                                                label="Phone number"
+                                                variant="outlined"
+                                                defaultValue={user.Phone_number}
+                                                onChange={(event) => setUserEdit({ ...userEdit, Phone_number: event.target.value })} />
+                                        </Grid>
+                                        <Grid marginTop={1}>
+                                            <FormControl>
+                                                <FormLabel id="radio-buttons-group-gender">Gender</FormLabel>
                                                 <RadioGroup
                                                     aria-labelledby="radio-buttons-group-gender"
                                                     name="radio-buttons-group-gender"
                                                     onChange={(event) => setUserEdit({ ...userEdit, Gender_ID: Number(event.target.value) })}
                                                     defaultValue={user.Gender_ID}
-                                                    >
+                                                >
                                                     {genders.map((o) => (
-                                                    <FormControlLabel
-                                                        value={o.ID} // <---- pass a primitive id value, don't pass the whole object here
-                                                        control={<Radio size="small" />}
-                                                        label={o.Gender}
-                                                    />
+                                                        <FormControlLabel
+                                                            value={o.ID} // <---- pass a primitive id value, don't pass the whole object here
+                                                            control={<Radio size="small" />}
+                                                            label={o.Gender} />
                                                     ))}
-                                            </RadioGroup>
-                                        </FormControl>
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+
+
+                                    <Grid item xs={12}>
+                                        <h4>Profile Picture</h4>
+                                        <Grid>
+                                            <img src={`${user.Profile_Picture}`} width="250" height="250" />
+                                        </Grid>
+                                        <input type="file" onChange={handleImageChange} />
+                                        <FormHelperText>recommend size is 250*250 pixels</FormHelperText>
+                                    </Grid>
+
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogEditClickClose}>Cancel</Button>
+                    <Button onClick={EditUser} color="error" autoFocus>Update Data</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={dialogEditPasswordOpen}
+                onClose={handleDialogEditPasswordClickClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Change Password"}
+                </DialogTitle>
+
+                <DialogContent>
+                    <Box>
+                        <Paper elevation={2} sx={{ padding: 2, margin: 2 }}>
+                            <Grid container>
+                                <Grid container>
+                                    <Grid margin={1} item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="old_password"
+                                            label="Old Password"
+                                            variant="outlined"
+                                            type="password"
+                                            onChange={(event) => setOld_password(event.target.value)} />
+                                    </Grid>
+                                    <Grid margin={1} item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="new_password"
+                                            label="New Password"
+                                            variant="outlined"
+                                            type="password"
+                                            onChange={(event) => setNew_password(event.target.value)} />
+                                    </Grid>
+                                    <Grid margin={1} item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="confirnm_password"
+                                            label="Confirm New Password"
+                                            variant="outlined"
+                                            type="password"
+                                            onChange={(event) => setConfirm_password(event.target.value)} />
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                        </Paper>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogEditPasswordClickClose}>Cancel</Button>
+                    <Button onClick={EditPasswordAccount} color="error" autoFocus>Change Password</Button>
+                </DialogActions>
+            </Dialog>
 
+            <Dialog
+                open={dialogDeleteOpen}
+                onClose={handleDialogDeleteClickClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Delete Account"}
+                </DialogTitle>
 
-                                <Grid item xs={12}>
-                                    <h4>Profile Picture</h4>
-                                    <Grid>
-                                        <img src={`${user.Profile_Picture}`} width="250" height="250"/>
+                <DialogContent>
+                    <Box>
+                        <Paper elevation={2} sx={{ padding: 2, margin: 2 }}>
+                            <Grid container>
+                                <Grid container>
+                                    <Grid margin={1} item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="password"
+                                            label="Password"
+                                            variant="outlined"
+                                            type="password"
+                                            onChange={(event) => setPassword(event.target.value)} />
                                     </Grid>
-                                    <input type="file" onChange={handleImageChange} />
-                                    <FormHelperText>recommend size is 250*250 pixels</FormHelperText>
-                                </Grid>
-
                                 </Grid>
                             </Grid>
                         </Paper>
                     </Box>
                 </DialogContent>
-            <DialogActions>
-                <Button onClick={handleDialogEditClickClose}>Cancel</Button>
-                <Button onClick={EditUser} color="error" autoFocus>Update Data</Button>
-            </DialogActions>
-        </Dialog>
-
-        <Dialog
-            open={dialogEditPasswordOpen}
-            onClose={handleDialogEditPasswordClickClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            >
-            <DialogTitle id="alert-dialog-title">
-                {"Change Password"}
-            </DialogTitle>
-
-            <DialogContent>
-                <Box>
-                    <Paper elevation={2} sx={{padding:2,margin:2}}>
-                        <Grid container>
-                            <Grid container>
-                                <Grid margin={1} item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="old_password"
-                                        label="Old Password"
-                                        variant="outlined"
-                                        type="password"
-                                        onChange={(event) => setOld_password( event.target.value )}/>
-                                </Grid>
-                                <Grid margin={1} item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="new_password"
-                                        label="New Password"
-                                        variant="outlined"
-                                        type="password"
-                                        onChange={(event) => setNew_password( event.target.value )}/>
-                                </Grid>
-                                <Grid margin={1} item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="confirnm_password"
-                                        label="Confirm New Password"
-                                        variant="outlined"
-                                        type="password"
-                                        onChange={(event) => setConfirm_password( event.target.value )}/>
-                                </Grid>
-                            </Grid>
-                            </Grid>
-                        </Paper>
-                    </Box>
-                </DialogContent>
-            <DialogActions>
-                <Button onClick={handleDialogEditPasswordClickClose}>Cancel</Button>
-                <Button onClick={EditPasswordAccount} color="error" autoFocus>Change Password</Button>
-            </DialogActions>
-        </Dialog>
-
-        <Dialog
-            open={dialogDeleteOpen}
-            onClose={handleDialogDeleteClickClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            >
-            <DialogTitle id="alert-dialog-title">
-                {"Delete Account"}
-            </DialogTitle>
-
-            <DialogContent>
-                <Box>
-                    <Paper elevation={2} sx={{padding:2,margin:2}}>
-                        <Grid container>
-                            <Grid container>
-                                <Grid margin={1} item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="password"
-                                        label="Password"
-                                        variant="outlined"
-                                        type="password"
-                                        onChange={(event) => setPassword( event.target.value )}/>
-                                </Grid>
-                            </Grid>
-                            </Grid>
-                        </Paper>
-                    </Box>
-                </DialogContent>
-            <DialogActions>
-                <Button onClick={handleDialogDeleteClickClose}>Cancel</Button>
-                <Button onClick={DeleteAccount} color="error" autoFocus>Delete Password</Button>
-            </DialogActions>
-        </Dialog>
-    </Container>
+                <DialogActions>
+                    <Button onClick={handleDialogDeleteClickClose}>Cancel</Button>
+                    <Button onClick={DeleteAccount} color="error" autoFocus>Delete Password</Button>
+                </DialogActions>
+            </Dialog>
+        </Container></>
     );
     return null;
 }

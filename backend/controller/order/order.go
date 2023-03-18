@@ -70,7 +70,7 @@ func CreateOrder(c *gin.Context) {
 }
 
 // GET /order/:email
-func GetLastAccont(c *gin.Context) {
+func GetOrder(c *gin.Context) {
 	var user entity.User
 	var order []entity.Order
 
@@ -81,7 +81,7 @@ func GetLastAccont(c *gin.Context) {
 		return
 	}
 
-	if err := entity.DB().Raw("SELECT * FROM accounts WHERE user_id = ? ORDER BY id DESC LIMIT 1", user.ID).Find(&order).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC", user.ID).Find(&order).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

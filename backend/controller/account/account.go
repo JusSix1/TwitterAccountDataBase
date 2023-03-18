@@ -81,6 +81,26 @@ func CreateAccount(c *gin.Context) {
 func GetAllAccount(c *gin.Context) {
 	var user entity.User
 	var account []entity.Account
+
+	email := c.Param("email")
+
+	if tx := entity.DB().Where("email = ?", email).First(&user); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	if err := entity.DB().Preload("Account_Status").Raw("SELECT * FROM accounts WHERE user_id = ? ORDER BY id_account DESC", user.ID).Find(&account).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": account})
+}
+
+// GET /unsold-account/:email
+func GetUnsoldAccount(c *gin.Context) {
+	var user entity.User
+	var account []entity.Account
 	var accoountStatus entity.Account_Status
 
 	email := c.Param("email")
@@ -95,7 +115,7 @@ func GetAllAccount(c *gin.Context) {
 		return
 	}
 
-	if err := entity.DB().Preload("Account_Status").Raw("SELECT * FROM accounts WHERE user_id = ? AND account_status_id = ? ORDER BY id DESC", user.ID, accoountStatus.ID).Find(&account).Error; err != nil {
+	if err := entity.DB().Preload("Account_Status").Raw("SELECT * FROM accounts WHERE user_id = ? AND account_status_id = ? ORDER BY id_account DESC", user.ID, accoountStatus.ID).Find(&account).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -103,19 +123,13 @@ func GetAllAccount(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": account})
 }
 
-// GET /unsold-account/:email
-func GetUnsoldAccount(c *gin.Context) {
-	var user entity.User
+// GET /account-in-order
+func GetAccountInOrder(c *gin.Context) {
 	var account []entity.Account
 
-	email := c.Param("email")
+	id := c.Param("id")
 
-	if tx := entity.DB().Where("email = ?", email).First(&user); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
-		return
-	}
-
-	if err := entity.DB().Preload("Account_Status").Raw("SELECT * FROM accounts WHERE user_id = ? ORDER BY id DESC", user.ID).Find(&account).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM accounts WHERE order_id = ? ORDER BY id_account DESC", id).Find(&account).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

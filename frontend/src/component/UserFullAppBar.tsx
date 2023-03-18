@@ -26,7 +26,7 @@ import { UsersInterface } from '../models/user/IUser';
 // import { AdminsInterface } from '../models/admin/IAdmin';
 import ip_address from './ip';
 
-function FullAppBar() {
+function UserFullAppBar() {
   const [user, setUser] = React.useState<Partial<UsersInterface>>({});
   // const [admin, setAdmin] = React.useState<Partial<AdminsInterface>>({});
   const signout = () => {
@@ -48,6 +48,16 @@ function FullAppBar() {
           <ListItem button component={RouterLink} to="/AllMyAccount">
             <HomeIcon />
             <ListItemText primary="All My Account" sx={{ paddingLeft: 1 }} />
+          </ListItem>
+
+          <ListItem button component={RouterLink} to="/UnsoldAccount">
+            <HomeIcon />
+            <ListItemText primary="Unsold Account" sx={{ paddingLeft: 1 }} />
+          </ListItem>
+
+          <ListItem button component={RouterLink} to="/MyOrder">
+            <HomeIcon />
+            <ListItemText primary="My Order" sx={{ paddingLeft: 1 }} />
           </ListItem>
 
         </List>
@@ -189,4 +199,4 @@ function FullAppBar() {
   );
 }
 
-export default FullAppBar;
+export default UserFullAppBar;

@@ -1,5 +1,6 @@
 import { AccountStatusesInterface } from "./IAccount_Status";
 import { UsersInterface } from "../user/IUser";
+import { OrdersInterface } from "../order/IOrder";
 
 export interface AccountsInterface {
     ID:		number,
@@ -14,4 +15,6 @@ export interface AccountsInterface {
 	Years:             number,           
 	Account_Status_ID: number,         
 	Account_Status:    AccountStatusesInterface,
+	Order_ID: 		   number,
+	Order: 			   OrdersInterface,
 }
