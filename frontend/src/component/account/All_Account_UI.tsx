@@ -129,7 +129,7 @@ export default function All_Account_UI() {
     };
       
     const getAccount = async () => {
-        const apiUrl = "http://" + ip_address() + ":8080/all-account/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
+        const apiUrl = ip_address() + "/all-account/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
         const requestOptions = {
             method: "GET",
             headers: {
@@ -166,7 +166,7 @@ export default function All_Account_UI() {
             });
         }
 
-        const apiUrl = "http://" + ip_address() + ":8080/account";                      //ส่งขอการแก้ไข
+        const apiUrl = ip_address() + "/account";                      //ส่งขอการแก้ไข
         const requestOptions = {     
             method: "POST",      
             headers: {
@@ -205,7 +205,7 @@ export default function All_Account_UI() {
             });
         }
 
-        const apiUrl = "http://" + ip_address() + ":8080/account";                      //ส่งขอการแก้ไข
+        const apiUrl = ip_address() + "/account";                      //ส่งขอการแก้ไข
         const requestOptions = {     
             method: "DELETE",      
             headers: {
@@ -232,7 +232,9 @@ export default function All_Account_UI() {
 
     React.useEffect(() => {
         const fetchData = async () => {
+            setDialogLoadOpen(true);
             await getAccount();
+            setDialogLoadOpen(false);
         }
         fetchData();
     }, []);

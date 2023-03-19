@@ -96,7 +96,7 @@ export default function Order_Account_UI() {
     }
       
     const getUnsoldAccount = async () => {
-        const apiUrl = "http://" + ip_address() + ":8080/unsold-account/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
+        const apiUrl = ip_address() + "/unsold-account/"+localStorage.getItem('email'); // email คือ email ที่ผ่านเข้ามาทาง parameter
         const requestOptions = {
             method: "GET",
             headers: {
@@ -126,7 +126,7 @@ export default function Order_Account_UI() {
             });
         }
 
-        const apiUrl = "http://" + ip_address() + ":8080/order/" + localStorage.getItem('email');                      //ส่งขอการแก้ไข
+        const apiUrl = ip_address() + "/order/" + localStorage.getItem('email');                      //ส่งขอการแก้ไข
         const requestOptions = {     
             method: "POST",      
             headers: {
@@ -153,7 +153,9 @@ export default function Order_Account_UI() {
 
     React.useEffect(() => {
         const fetchData = async () => {
+            setDialogLoadOpen(true);
             await getUnsoldAccount();
+            setDialogLoadOpen(false);
         }
         fetchData();
     }, []);

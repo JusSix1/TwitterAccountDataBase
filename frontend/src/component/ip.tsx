@@ -1,5 +1,5 @@
 const ip_address = function() {
-    return "192.168.1.37"
+    return "https://enteraccdatabase.herokuapp.com"
     }
     
     export default ip_address;

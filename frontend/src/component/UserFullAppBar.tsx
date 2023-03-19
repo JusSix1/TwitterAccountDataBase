@@ -85,8 +85,7 @@ function UserFullAppBar() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const getUserProfilePicture = async () => {
-    const apiUrl = "http://" + ip_address() + ":8080/usersprofilepicture/" + localStorage.getItem('email') ; // email คือ email ที่ผ่านเข้ามาทาง parameter
-    console.log(apiUrl)
+    const apiUrl = ip_address() + "/usersprofilepicture/" + localStorage.getItem('email') ; // email คือ email ที่ผ่านเข้ามาทาง parameter
     const requestOptions = {
         method: "GET",
         headers: {

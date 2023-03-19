@@ -107,8 +107,7 @@ function User_Profile(){
     
 
     const getUser = async () => {
-        const apiUrl = "http://" + ip_address() + ":8080/user/"+email; // email คือ email ที่ผ่านเข้ามาทาง parameter
-        console.log(apiUrl)
+        const apiUrl = ip_address() + "/user/"+email; // email คือ email ที่ผ่านเข้ามาทาง parameter
         const requestOptions = {
             method: "GET",
             headers: {
@@ -127,7 +126,7 @@ function User_Profile(){
     };
 
     const getGender = async () => {
-        const apiUrl = "http://" + ip_address() + ":8080/genders";
+        const apiUrl = ip_address() + "/genders";
         const requestOptions = {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -153,7 +152,7 @@ function User_Profile(){
             Phone_number: userEdit.Phone_number,
             Gender_ID: userEdit.Gender_ID,
         };
-        const apiUrl = "http://" + ip_address() + ":8080/users";                      //ส่งขอการแก้ไข
+        const apiUrl = ip_address() + "/users";                      //ส่งขอการแก้ไข
         const requestOptions = {     
             method: "PATCH",      
             headers: {
@@ -184,7 +183,7 @@ function User_Profile(){
                 OldPassword: old_password,
                 NewPassword: new_password,
             };
-            const apiUrl = "http://" + ip_address() + ":8080/usersPassword";                      //ส่งขอการแก้ไข
+            const apiUrl = ip_address() + "/usersPassword";                      //ส่งขอการแก้ไข
             const requestOptions = {     
                 method: "PATCH",      
                 headers: {
@@ -216,7 +215,7 @@ function User_Profile(){
         let data = {
             Password: password,
         };
-        const apiUrl = "http://" + ip_address() + ":8080/users/" + email;                      //ส่งขอการลบ
+        const apiUrl = ip_address() + "/users/" + email;                      //ส่งขอการลบ
         const requestOptions = {     
             method: "DELETE",      
             headers: {

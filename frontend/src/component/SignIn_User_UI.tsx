@@ -57,7 +57,7 @@ function SignIn_User() {
   const [error, setError] = useState(false);
 
   async function LoginUser(data: SigninUserInterface) {
-    const apiUrl = "http://" + ip_address() + ":8080";
+    const apiUrl = ip_address();
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -82,7 +82,7 @@ function SignIn_User() {
   }
 
   // async function LoginAdmin(data: SigninUserInterface) {
-  //   const apiUrl = "http://" + ip_address() + ":8080";
+  //   const apiUrl = ip_address() + ":8080";
   //   const requestOptions = {
   //     method: "POST",
   //     headers: { "Content-Type": "application/json" },
@@ -109,7 +109,7 @@ function SignIn_User() {
   // }
 
   const getGender = async () => {
-    const apiUrl = "http://" + ip_address() + ":8080/genders";
+    const apiUrl = ip_address() + "/genders";
     const requestOptions = {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -222,7 +222,7 @@ function SignIn_User() {
           Gender_ID: gender_id,
       };
 
-      const apiUrl = "http://" + ip_address() + ":8080/users"; // create user
+      const apiUrl = ip_address() + "/users"; // create user
       const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
