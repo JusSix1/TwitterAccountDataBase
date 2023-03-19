@@ -55,7 +55,7 @@ func LoginUser(c *gin.Context) {
 	jwtWrapper := service.JwtWrapper{
 		SecretKey:       "SvNQpBN8y3qlVrsGAYYWoJJk56LtzFHx",
 		Issuer:          "AuthService",
-		ExpirationHours: 24,
+		ExpirationHours: 168,
 	}
 
 	signedToken, err := jwtWrapper.GenerateToken(user.Email)

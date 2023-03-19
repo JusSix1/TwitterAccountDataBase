@@ -185,7 +185,7 @@ function SignIn_User() {
     if (res) {
       setSuccess(true);
       setTimeout(() => {
-        window.location.reload();
+        window.location.replace("/AllMyAccount");
       }, 1000);
     } else {
       setError(true);
@@ -313,7 +313,7 @@ function SignIn_User() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://cdn.cloudflare.steamstatic.com/store/home/store_home_share.jpg)",
+            backgroundImage: "url(https://pixabay.com/get/g935d7c54b4a3145951f813a8dacff4399e58e895f1924f81ab8b24dab4ff3682054de6a3ed37c91ca121371e6ccf62fd.png)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
