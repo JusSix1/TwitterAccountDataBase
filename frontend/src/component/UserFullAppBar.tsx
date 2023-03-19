@@ -16,6 +16,9 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import GradingIcon from '@mui/icons-material/Grading';
 
 // Admin Icon
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
@@ -25,6 +28,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { UsersInterface } from '../models/user/IUser';
 // import { AdminsInterface } from '../models/admin/IAdmin';
 import ip_address from './ip';
+import { Avatar } from '@mui/material';
 
 function UserFullAppBar() {
   const [user, setUser] = React.useState<Partial<UsersInterface>>({});
@@ -40,23 +44,18 @@ function UserFullAppBar() {
       return (
         <List sx={{ width: "100%" }}>
 
-          <ListItem button component={RouterLink} to="/">
-            <HomeIcon />
-            <ListItemText primary="FirstPage" sx={{ paddingLeft: 1 }} />
-          </ListItem>
-
           <ListItem button component={RouterLink} to="/AllMyAccount">
-            <HomeIcon />
+            <ViewListIcon />
             <ListItemText primary="All My Account" sx={{ paddingLeft: 1 }} />
           </ListItem>
 
           <ListItem button component={RouterLink} to="/UnsoldAccount">
-            <HomeIcon />
+            <MoneyOffIcon />
             <ListItemText primary="Unsold Account" sx={{ paddingLeft: 1 }} />
           </ListItem>
 
           <ListItem button component={RouterLink} to="/MyOrder">
-            <HomeIcon />
+            <GradingIcon />
             <ListItemText primary="My Order" sx={{ paddingLeft: 1 }} />
           </ListItem>
 
@@ -85,25 +84,25 @@ function UserFullAppBar() {
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
-  // const getUser = async () => {
-  //   const apiUrl = "http://" + ip_address() + "/user/" + localStorage.getItem("email");
-  //   const requestOptions = {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //   };
-
-  //   await fetch(apiUrl, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((res) => {
-  //       if (res.data) {
-  //         setUser(res.data);
-
-  //       }
-  //     });
-  // };
+  const getUserProfilePicture = async () => {
+    const apiUrl = "http://" + ip_address() + ":8080/usersprofilepicture/" + localStorage.getItem('email') ; // email คือ email ที่ผ่านเข้ามาทาง parameter
+    console.log(apiUrl)
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+        },
+    };
+   
+    await fetch(apiUrl, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.data) {
+                setUser(res.data);
+            }
+        });
+};
 
   // async function GetAdmin() {
   //   const apiUrl = "http://localhost:8080/admin/" + localStorage.getItem("email");
@@ -126,7 +125,7 @@ function UserFullAppBar() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      // await getUser();
+      await getUserProfilePicture();
       // await GetAdmin();
     }
     fetchData();
@@ -155,7 +154,7 @@ function UserFullAppBar() {
           </Drawer>
 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Entacc
+            EnterAcc
           </Typography>
 
           {auth && (                                                                               /* รูป Icon Profild */
@@ -168,7 +167,7 @@ function UserFullAppBar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                  <Avatar alt="Remy Sharp" src={`${user.Profile_Picture}`} />
               </IconButton>
               <Menu
                 id="menu-appbar"

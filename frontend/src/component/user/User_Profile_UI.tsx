@@ -78,6 +78,7 @@ function User_Profile(){
     const handleDialogEditClickOpen = () => {
         setUserEdit(user);
         setBirthday(dayjs(user.Birthday));
+        setImageString(user.Profile_Picture || null)
         setDialogEditOpen(true);
         setAnchorEl(null);
     };
@@ -152,7 +153,7 @@ function User_Profile(){
             Phone_number: userEdit.Phone_number,
             Gender_ID: userEdit.Gender_ID,
         };
-        const apiUrl = "http://" + ip_address() + "/users";                      //ส่งขอการแก้ไข
+        const apiUrl = "http://" + ip_address() + ":8080/users";                      //ส่งขอการแก้ไข
         const requestOptions = {     
             method: "PATCH",      
             headers: {
@@ -446,7 +447,7 @@ function User_Profile(){
                                     <Grid item xs={12}>
                                         <h4>Profile Picture</h4>
                                         <Grid>
-                                            <img src={`${user.Profile_Picture}`} width="250" height="250" />
+                                            <img src={`${imageString}`} width="250" height="250" />
                                         </Grid>
                                         <input type="file" onChange={handleImageChange} />
                                         <FormHelperText>recommend size is 250*250 pixels</FormHelperText>

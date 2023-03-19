@@ -81,6 +81,19 @@ func GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
+// GET /usersprofilepicture/:email
+func GetUserProfilePicture(c *gin.Context) {
+	var user entity.User
+	email := c.Param("email")
+
+	if err := entity.DB().Raw("SELECT profile_picture FROM users WHERE email = ? AND deleted_at IS NULL", email).Find(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}
+
 // PATCH /users
 func UpdateUser(c *gin.Context) {
 	var user entity.User

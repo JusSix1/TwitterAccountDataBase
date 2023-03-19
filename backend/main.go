@@ -31,6 +31,7 @@ func main() {
 		protected := router.Use(middlewares.Authorizes())
 		{
 			protected.GET("/user/:email", user_controller.GetUser)
+			protected.GET("/usersprofilepicture/:email", user_controller.GetUserProfilePicture)
 			protected.PATCH("/users", user_controller.UpdateUser)
 			protected.PATCH("/usersPassword", user_controller.UpdateUserPassword)
 			protected.DELETE("/users/:email", user_controller.DeleteUser)
