@@ -40,27 +40,27 @@ func SetupDatabase() {
 
 	db = database
 
-	// Gen1 := Gender{
-	// 	Gender: "Male",
-	// }
-	// Gen2 := Gender{
-	// 	Gender: "Female",
-	// }
-	// Gen3 := Gender{
-	// 	Gender: "Other",
-	// }
-	// db.Model(&Gender{}).Create(&Gen1)
-	// db.Model(&Gender{}).Create(&Gen2)
-	// db.Model(&Gender{}).Create(&Gen3)
+	Gen1 := Gender{
+		Gender: "Male",
+	}
+	Gen2 := Gender{
+		Gender: "Female",
+	}
+	Gen3 := Gender{
+		Gender: "Other",
+	}
+	db.Model(&Gender{}).Create(&Gen1)
+	db.Model(&Gender{}).Create(&Gen2)
+	db.Model(&Gender{}).Create(&Gen3)
 
-	// AS1 := Account_Status{
-	// 	Status: "Sold",
-	// }
-	// AS2 := Account_Status{
-	// 	Status: "Unsold",
-	// }
-	// db.Model(&Account_Status{}).Create(&AS1)
-	// db.Model(&Account_Status{}).Create(&AS2)
+	AS1 := Account_Status{
+		Status: "Sold",
+	}
+	AS2 := Account_Status{
+		Status: "Unsold",
+	}
+	db.Model(&Account_Status{}).Create(&AS1)
+	db.Model(&Account_Status{}).Create(&AS2)
 
 	// User1 := User{
 	// 	Email:           "natt@gmail.com",
